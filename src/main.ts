@@ -5,7 +5,7 @@ import { NotFoundExceptionFilter } from './NotFoundExceptionFilter';
 import { ResponseInterceptor } from './response.intercepter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({transform: true}));
   app.useGlobalFilters(new NotFoundExceptionFilter());
   app.useGlobalInterceptors(new ResponseInterceptor()); 
   app.enableShutdownHooks();

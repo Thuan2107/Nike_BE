@@ -1,21 +1,15 @@
 import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator'
-import { Transform } from 'class-transformer';
 
 export class CreateProductDto {
     @IsNotEmpty()
     @IsString()
     name: string;
 
-    @IsNotEmpty()
     @IsNumber()
-    categoryId: number
-
+    status_id: number
     
     @IsNumber()
-    statusId: number
-    
-    @IsNumber()
-    typeId: number
+    type_id: number
     
     @IsString()
     image: string

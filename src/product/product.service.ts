@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { CategoriesService } from 'src/categories/categories.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    private categoryService: CategoriesService
   ){}
 
   create(createProductDto: CreateProductDto) {
@@ -17,8 +19,18 @@ export class ProductService {
     return this.productRepository.save(newProduct);
   }
 
-  async findAll() {
-    return await this.productRepository.find();
+  async findAll(categoryId: number) {
+    if(categoryId == -1){
+      return await this.productRepository.find();
+    }
+
+    const category = await this.categoryService.findOne(categoryId)
+
+    if(!category){
+      throw new HttpException("category_id không tồn tại", 400)
+    }
+
+    return await this.findProductByIds(category.products)
   }
 
   findOne(id: number) {
@@ -30,7 +42,11 @@ export class ProductService {
     return this.productRepository.update(id, updateProductDto);
   }
 
-  remove(id: number) {
-    return this.productRepository.delete(id);
+  async remove(id: number) {
+    return await this.productRepository.delete(id);
+  }
+
+  async findProductByIds(ids: number[]){
+    return await this.productRepository.find({where: {id: In(ids)}})
   }
 } 

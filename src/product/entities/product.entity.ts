@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('products')
 export class Product {
     @PrimaryGeneratedColumn()
     id: number;
@@ -12,38 +12,38 @@ export class Product {
     price: number;
 
     @Column()
-    categoryId: number
+    category_id: number
 
     @Column({ default: '' })
-    categoryName: string
+    category_name: string
 
     @Column()
-    statusId: number
+    status_id: number
 
     @Column({ default: '' })
-    statusName: string
+    status_name: string
 
     @Column()
-    typeId: number 
+    type_id: number 
 
     @Column({ default: '' })
-    typeName: string
+    type_name: string
 
     @Column()
     image: string
     
-    @Column('text', { array: true, default: () => 'ARRAY[]::text[]', nullable: false })
+    @Column('json', {default: () => "'[]'", nullable: false })
     images: string[]
 
     @Column()
     description: string
 
     @Column({default: false})
-    isFavorite: boolean
+    is_favorite: boolean
 
-    @Column('text', { array: true, default: () => 'ARRAY[]::int[]', nullable: false })
+    @Column('json', {default: () => "'[]'", nullable: false })
     sizes: number[]
     
-    @Column('text', { array: true, default: () => 'ARRAY[]::text[]', nullable: false })
+    @Column('json', {default: () => "'[]'", nullable: false })
     colors: string[]
 }
